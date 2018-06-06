@@ -27,6 +27,8 @@ def write_raster(path, array, **kwargs):
         >> write_raster("new.tif", new_img)
 
     """
+    if len(array.shape) != 2 and len(array.shape) != 3:
+        raise TypeError('invalid shape (must be either 2d or 3d)')
 
     if is_dask_collection(array):
         with RasterioDataset(path, 'w', **kwargs) as dst:
@@ -35,7 +37,7 @@ def write_raster(path, array, **kwargs):
         with rasterio.open(path, 'w', **kwargs) as dst:
             if len(array.shape) == 2:
                 dst.write(array, 1)
-            elif len(array.shape) == 3:
+            else:
                 dst.write(array)
 
 
@@ -63,17 +65,15 @@ class RasterioDataset:
             indexes = list(
                 range(index_range.start + 1, index_range.stop + 1,
                       index_range.step or 1))
-        elif len(key) == 2:
+        else:
             indexes = 1
             y, x = key
-        else:
-            raise TypeError('invalid key: must be of size 2 or 3')
+
         chy_off = y.start
         chy = y.stop - y.start
         chx_off = x.start
         chx = x.stop - x.start
 
-        # band indexes
         self.dataset.write(
             item, window=Window(chx_off, chy_off, chx, chy), indexes=indexes)
 

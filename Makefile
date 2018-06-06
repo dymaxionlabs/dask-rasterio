@@ -1,9 +1,9 @@
 .PHONY: test cov
 
 cov:
-	poetry run coverage run -m pytest
+	RIO_IGNORE_CREATION_KWDS=TRUE poetry run coverage run -m pytest
 	poetry run coverage report
 	poetry run coverage html
 
 test:
-	poetry run pytest
+	RIO_IGNORE_CREATION_KWDS=TRUE poetry run pytest
