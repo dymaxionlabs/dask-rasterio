@@ -4,9 +4,38 @@
 parallel using [Rasterio](https://github.com/mapbox/rasterio) and
 [Dask](https://dask.pydata.org) arrays.
 
+
 ## Usage
 
-...
+Read a multiband raster with `read_raster`:
+
+```
+>>> from dask_rasterio import read_raster
+
+>>> array = read_raster('tests/data/RGB.byte.tif')
+>>> array
+dask.array<stack, shape=(3, 718, 791), dtype=uint8, chunksize=(1, 3, 791)>
+
+>>> array.mean()
+dask.array<mean_agg-aggregate, shape=(), dtype=float64, chunksize=()>
+>>> array.mean().compute()
+40.858976977533935
+```
+
+Write a singleband or multiband raster with `write_raster`:
+
+```
+>>> from dask_rasterio import read_raster
+
+>>> array = read_raster('tests/data/RGB.byte.tif')
+
+>>> new_array = array & (array > 100)
+>>> new_array
+dask.array<and_, shape=(3, 718, 791), dtype=uint8, chunksize=(1, 3, 791)>
+
+>>> prof = ... # reuse profile from tests/data/RGB.byte.tif...
+>>> write_raster('processed_image.tif', new_array, **prof)
+```
 
 ## Install
 
