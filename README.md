@@ -1,7 +1,7 @@
 # dask-rasterio
 
 [![Build Status](https://travis-ci.org/dymaxionlabs/dask-rasterio.svg?branch=master)](https://travis-ci.org/dymaxionlabs/dask-rasterio)
-[![codecov](https://codecov.io/gh/dymaxionlabs/dask-rasterio/branch/master/graph/badge.svg)](https://codecov.io/gh/dymaxionlabs/dask-rasterio)
+[![codecov](https://codecov.io/gh/dymaxionlabs/dask-rasterio/branch/master/graph/badge.svg)](https://codecov.io/gh/dymaxionlabs/dask-rasterio) [![Join the chat at https://gitter.im/dymaxionlabs/dask-rasterio](https://badges.gitter.im/dymaxionlabs/dask-rasterio.svg)](https://gitter.im/dymaxionlabs/dask-rasterio?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 `dask-rasterio` provides some methods for reading and writing rasters in
 parallel using [Rasterio](https://github.com/mapbox/rasterio) and
