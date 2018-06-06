@@ -11,7 +11,9 @@ authors = ["Damián Silvani <munshkr@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3"
 dask = "^0.17.5"
-rasterio = ">=0.36.0, <1.1"
+rasterio = {version = "^1.0b1", allows-prereleases = true}
+toolz = "^0.9.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
+pylint = "^1.9"
