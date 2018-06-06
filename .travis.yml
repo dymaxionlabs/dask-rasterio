@@ -1,0 +1,23 @@
+language: python
+
+python:
+  - "2.7"
+  - "3.5"
+  - "3.6"
+
+before_install:
+  - sudo apt-get install -y build-essential gdal-bin libgdal-dev libproj-dev
+  - pip install -U poetry
+
+install:
+  - poetry install
+
+addons:
+  apt:
+    update: true
+
+script:
+  - make
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
