@@ -14,13 +14,24 @@ from dask_rasterio.read import get_band_count
 THRESHOLD = 127
 
 
-def test_version():
-    assert __version__ == '0.1.0'
+def get_profile(path):
+    with rasterio.open(path) as src:
+        return src.profile.copy()
+
+
+def assert_equal_raster_profile(dataset, expected_profile):
+    attributes = ['transform', 'crs', 'driver', 'width', 'height', 'count']
+    for attr in attributes:
+        assert getattr(dataset, attr) == expected_profile[attr]
 
 
 @pytest.fixture
 def some_raster_path():
     return os.path.join(os.path.dirname(__file__), 'data', 'RGB.byte.tif')
+
+
+def test_version():
+    assert __version__ == '0.1.0'
 
 
 def test_read_raster(some_raster_path):
@@ -56,11 +67,6 @@ def test_do_calcs_on_array(some_raster_path):
         assert mean.compute() == expected_mean
 
 
-def get_profile(path):
-    with rasterio.open(path) as src:
-        return src.profile
-
-
 def test_write_raster_band(some_raster_path):
     with tempfile.TemporaryDirectory(prefix='dask_rasterio_test_') as tmpdir:
         # Read first band of raster
@@ -78,7 +84,7 @@ def test_write_raster_band(some_raster_path):
         write_raster(dst_path, new_array, **prof)
 
         with rasterio.open(dst_path) as src:
-            assert src.count == 1
+            assert_equal_raster_profile(src, prof)
             expected_new_array = src.read(1)
             assert expected_new_array.dtype == new_array.dtype
             assert_array_equal(new_array.compute(), expected_new_array)
@@ -95,7 +101,7 @@ def test_write_raster(some_raster_path):
         write_raster(dst_path, new_array, **prof)
 
         with rasterio.open(dst_path) as src:
-            assert src.count == get_band_count(some_raster_path)
+            assert_equal_raster_profile(src, prof)
             expected_new_array = src.read()
             assert expected_new_array.dtype == new_array.dtype
             assert_array_equal(new_array.compute(), expected_new_array)
@@ -119,7 +125,7 @@ def test_write_raster_band_from_numpy(some_raster_path):
         write_raster(dst_path, new_array, **prof)
 
         with rasterio.open(dst_path) as src:
-            assert src.count == 1
+            assert_equal_raster_profile(src, prof)
             expected_new_array = src.read(1)
             assert expected_new_array.dtype == new_array.dtype
             assert_array_equal(new_array, expected_new_array)
@@ -138,7 +144,7 @@ def test_write_raster_from_numpy(some_raster_path):
         write_raster(dst_path, new_array, **prof)
 
         with rasterio.open(dst_path) as src:
-            assert src.count == get_band_count(some_raster_path)
+            assert_equal_raster_profile(src, prof)
             expected_new_array = src.read()
             assert expected_new_array.dtype == new_array.dtype
             assert_array_equal(new_array, expected_new_array)
