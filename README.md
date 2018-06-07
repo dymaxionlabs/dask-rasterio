@@ -12,7 +12,7 @@ parallel using [Rasterio](https://github.com/mapbox/rasterio) and
 
 Read a multiband raster with `read_raster`:
 
-```
+```python
 >>> from dask_rasterio import read_raster
 
 >>> array = read_raster('tests/data/RGB.byte.tif')
@@ -27,7 +27,7 @@ dask.array<mean_agg-aggregate, shape=(), dtype=float64, chunksize=()>
 
 Write a singleband or multiband raster with `write_raster`:
 
-```
+```python
 >>> from dask_rasterio import read_raster
 
 >>> array = read_raster('tests/data/RGB.byte.tif')
