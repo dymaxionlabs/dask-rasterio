@@ -5,24 +5,43 @@ from dask.base import tokenize
 from rasterio.windows import Window
 
 
-def read_raster(path, block_size=1):
-    """Read all bands from raster"""
-    bands = range(1, get_band_count(path) + 1)
-    return da.stack([
-        read_raster_band(path, band=band, block_size=block_size)
-        for band in bands
-    ])
+def read_raster(path, band=None, block_size=1):
+    """Read all or some bands from raster
+
+    Arguments:
+        path {string} -- path to raster file
+
+    Keyword Arguments:
+        band {int, iterable(int)} -- band number or iterable of bands.
+            When passing None, it reads all bands (default: {None})
+        block_size {int} -- block size multiplier (default: {1})
+
+    Returns:
+        dask.array.Array -- a Dask array
+    """
+
+    if isinstance(band, int):
+        return read_raster_band(path, band=band, block_size=block_size)
+    else:
+        if band is None:
+            bands = range(1, get_band_count(path) + 1)
+        else:
+            bands = list(band)
+        return da.stack([
+            read_raster_band(path, band=band, block_size=block_size)
+            for band in bands
+        ])
 
 
 def read_raster_band(path, band=1, block_size=1):
     """Read a raster band and return a Dask array
 
     Arguments:
-        path {string} -- Path to the raster file
+        path {string} -- path to the raster file
 
     Keyword Arguments:
-        band {int} -- Number of band to read (default: {1})
-        block_size {int} -- Multiplier for block size (default: {1})
+        band {int} -- number of band to read (default: {1})
+        block_size {int} -- block size multiplier (default: {1})
 
     """
 
