@@ -199,9 +199,10 @@ def test_read_raster_band_with_block_size(some_raster_path):
     assert_array_equal(array, array_4b)
 
     with rasterio.open(some_raster_path) as src:
-        ch, cw = src.block_shapes[0]
+        block_height, block_width = src.block_shapes[0]
+        height, width = src.shape
 
-    assert array.chunks[0][0] == ch
-    assert array.chunks[1][0] == cw
-    assert array_4b.chunks[0][0] == ch * 4
-    assert array_4b.chunks[1][0] == cw * 4
+    assert array.chunks[0][0] == block_height
+    assert array.chunks[1][0] == block_width
+    assert array_4b.chunks[0][0] == min(block_height * 4, height)
+    assert array_4b.chunks[1][0] == min(block_width * 4, width)
