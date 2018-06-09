@@ -183,3 +183,25 @@ def test_cannot_write_raster_with_badly_shaped_array(some_raster_path):
 
         with pytest.raises(TypeError):
             write_raster(dst_path, np.random.rand(10, 10, 10, 3), **prof)
+
+
+def multiply_chunks(chunks, multiplier):
+    w_chunks = tuple(np.array([list(chunks[0])])) * multiplier
+    h_chunks = tuple(np.array([list(chunks[1])])) * multiplier
+    return (w_chunks, h_chunks)
+
+
+def test_read_raster_band_with_block_size(some_raster_path):
+    array = read_raster_band(some_raster_path)
+    array_4b = read_raster_band(some_raster_path, block_size=4)
+    assert array.shape == array_4b.shape
+    assert array.dtype == array_4b.dtype
+    assert_array_equal(array, array_4b)
+
+    with rasterio.open(some_raster_path) as src:
+        ch, cw = src.block_shapes[0]
+
+    assert array.chunks[0][0] == ch
+    assert array.chunks[1][0] == cw
+    assert array_4b.chunks[0][0] == ch * 4
+    assert array_4b.chunks[1][0] == cw * 4

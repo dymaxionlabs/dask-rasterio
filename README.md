@@ -50,6 +50,16 @@ dask.array<and_, shape=(3, 718, 791), dtype=uint8, chunksize=(1, 3, 791)>
 >>> write_raster('processed_image.tif', new_array, **prof)
 ```
 
+#### Chunk size
+
+Both `read_raster` and `write_raster` accept a `block_size` argument that
+acts as a multiplier to the block size of rasters. The default value is 1,
+which means the dask array chunk size will be the same as the block size of
+the raster file. You will have to adjust this value depending on the
+specification of your machine (how much memory do you have, and the block
+size of the raster).
+
+
 ## Install
 
 Install with pip:
