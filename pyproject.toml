@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dask-rasterio"
-version = "0.2.0"
+version = "0.2.1"
 description = "Read and write rasters in parallel using Rasterio and Dask"
 license = "BSD-2-Clause"
 readme = "README.md"
